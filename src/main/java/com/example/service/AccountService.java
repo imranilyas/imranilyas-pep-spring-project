@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.entity.Account;
 import com.example.repository.AccountRepository;
@@ -18,8 +19,13 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public Account loginHandler() {
-        return null;
+    public ResponseEntity<Account> loginHandler(Account account) {
+        Account login = accountRepository.findByUsernameAndPassword(account.getUsername(), account.getPassword());
+        if(login == null) {
+            return ResponseEntity.status(401).build();
+        } else {
+            return ResponseEntity.status(200).body(login);
+        }
     }
 
     public ResponseEntity<Account> registerHandler(Account account) {
