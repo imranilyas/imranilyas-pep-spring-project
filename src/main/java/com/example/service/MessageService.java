@@ -46,7 +46,7 @@ public class MessageService {
         }
 
         messageRepository.deleteById(id);
-        
+
         boolean exists = messageRepository.existsById(id);
         if(exists) {
             return ResponseEntity.status(200).build();
@@ -55,12 +55,22 @@ public class MessageService {
         }
     }
 
-    public Message updateMessageHandler() {
-        return null;
+    public ResponseEntity<Integer> updateMessageHandler(Integer message_id, Message message) {
+        Message original = messageRepository.findById(message_id).orElse(null);
+        String text = message.getMessage_text().trim();
+
+        if(text.isEmpty() || text.length() >= 255 || original == null) {
+            return ResponseEntity.status(400).build();
+        }
+        original.setMessage_text(message.getMessage_text());   
+        messageRepository.save(original);     
+
+        return ResponseEntity.status(200).body(1);
     }
 
-    public List<Message> getMessagesByAccountHandler() {
-        return null;
+    public ResponseEntity<List<Message>> getMessagesByAccountHandler(Integer account_id) {
+        List<Message> list = messageRepository.findMessagesByPosted_By(account_id);
+        return ResponseEntity.status(200).body(list);
     }
 
 }
