@@ -19,6 +19,16 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
+    public ResponseEntity<Account> accountExists(int id) {
+        Optional<Account> opt = accountRepository.findById(id);
+        Account account = opt.orElse(null);
+        if(account == null) {
+            return ResponseEntity.status(400).build();
+        } else {
+            return ResponseEntity.status(200).body(account);
+        }
+    }
+
     public ResponseEntity<Account> loginHandler(Account account) {
         Account login = accountRepository.findByUsernameAndPassword(account.getUsername(), account.getPassword());
         if(login == null) {

@@ -46,13 +46,18 @@ public class SocialMediaController {
     }
 
     @PostMapping("/messages")
-    public Message createMessage() {
-        return null;
+    public ResponseEntity<Message> createMessage(@RequestBody Message message) {
+        ResponseEntity<Account> account = accountService.accountExists(message.getPosted_by());
+        if(account.getStatusCodeValue() == 400) {
+            return ResponseEntity.status(account.getStatusCodeValue()).build();
+        } else {
+            return messageService.createMessageHandler(message);
+        }
     }
 
     @GetMapping("/messages")
-    public List<Message> getAllMessages() {
-        return null;
+    public ResponseEntity<List<Message>> getAllMessages() {
+        return messageService.getAllMessagesHandler();
     }
 
     @GetMapping("/messages/{message_id}")

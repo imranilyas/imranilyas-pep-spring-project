@@ -1,8 +1,10 @@
 package com.example.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.Message;
@@ -17,12 +19,19 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    public Message createMessageHandler() {
-        return null;
+    public ResponseEntity<Message> createMessageHandler(Message message) {
+        String text = message.getMessage_text().trim();
+        if(text.isEmpty() || text.length() >= 255) {
+            return ResponseEntity.status(400).build();
+        } else {
+            Message savedMessage = messageRepository.save(message);
+            return ResponseEntity.status(200).body(savedMessage);
+        }
     }
 
-    public List<Message> getAllMessagesHandler() {
-        return null;
+    public ResponseEntity<List<Message>> getAllMessagesHandler() {
+        List<Message> list = messageRepository.findAll();
+        return ResponseEntity.status(200).body(list);
     }
 
     public Message getMessageByMessageIdHandler() {
