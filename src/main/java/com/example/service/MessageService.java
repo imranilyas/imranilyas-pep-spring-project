@@ -34,12 +34,25 @@ public class MessageService {
         return ResponseEntity.status(200).body(list);
     }
 
-    public Message getMessageByMessageIdHandler() {
-        return null;
+    public ResponseEntity<Message> getMessageByMessageIdHandler(Integer id) {
+        Message message = messageRepository.findById(id).orElse(null);
+        return ResponseEntity.status(200).body(message);
     }
 
-    public void deleteMessageByMessageIdHandler() {
+    public ResponseEntity<Integer> deleteMessageByMessageIdHandler(Integer id) {
+        Message message = messageRepository.findById(id).orElse(null);
+        if(message == null) {
+            return ResponseEntity.status(200).build();
+        }
 
+        messageRepository.deleteById(id);
+        
+        boolean exists = messageRepository.existsById(id);
+        if(exists) {
+            return ResponseEntity.status(200).build();
+        } else {
+            return ResponseEntity.status(200).body(1);
+        }
     }
 
     public Message updateMessageHandler() {
