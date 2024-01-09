@@ -1,7 +1,6 @@
 package com.example.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +19,7 @@ public class MessageService {
     }
 
     public ResponseEntity<Message> createMessageHandler(Message message) {
+        // Check message is valid
         String text = message.getMessage_text().trim();
         if(text.isEmpty() || text.length() >= 255) {
             return ResponseEntity.status(400).build();
